@@ -17,9 +17,12 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <li><a (click)="onAddToShoppingList()" style="cursor:pointer">Добавить компонент в лист покупок</a></li>
-        <li><a href="#">Редактировать рецепт</a></li>
-        <li><a href="#">Удалить рецепт</a></li>
+        <li>
+          <a (click)="onAddToShoppingList()"
+               style="cursor:pointer">Добавить компонент в лист покупок</a>
+        </li>
+        <li><a (click)="onEditRecipe()" style="cursor:pointer">Редактировать рецепт</a></li>
+        <li><a style="cursor:pointer">Удалить рецепт</a></li>
       </ul>
     </div>
   </div>
