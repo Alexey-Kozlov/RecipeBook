@@ -14,10 +14,13 @@
         <div class="col-sm-2 form-group">
           <label for="amount">Изображение</label>
           <input type="file"
+                 id="image"
                  name="image"
                  class="form-control"
+                 accept="image/*"
                  ngModel
-                 (change)="fileChanged($event.target['files'][0])">
+                 (change)="fileChanged($event)"
+                 >
         </div>
       </div>
       <div class="row">

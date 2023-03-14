@@ -27,8 +27,8 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     this.idChangeSubscription?.unsubscribe();
   }
 
-  onEditItem(index: number) {
-    this.ingService.startedEditing.next(index);
+  onEditItem(id: number) {
+    this.ingService.startedEditing.next(id);
   }
 
 }

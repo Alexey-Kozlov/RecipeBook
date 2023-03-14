@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Recipe } from "../recipes/recipe.model";
 import { RecipeService } from "../recipes/recipe.service";
+import { Ingredient } from "./ingredient.model";
 
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
@@ -20,5 +21,12 @@ export class DataStorageService {
     this.http.get<Recipe[]>(process.env.NG_APP_API + '/GetRecipes').subscribe(recipes => {
       this.recipeService.setRecipes(recipes);
     });
+  }
+
+  saveIngredient(ingredient: Ingredient) {
+    this.http.post(process.env.NG_APP_API + '/CreateIngredient', ingredient)
+      .subscribe(response => {
+        console.log(response);
+      });
   }
 }

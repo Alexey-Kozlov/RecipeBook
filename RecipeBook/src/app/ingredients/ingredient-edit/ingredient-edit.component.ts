@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { Ingredient } from '../../shared/ingredient.model';
 import { IngredientService } from '../ingredient.service';
 
+
+
 @Component({
   selector: 'app-ingredient-edit',
   templateUrl: './ingredient-edit.component.html',
@@ -15,23 +17,21 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   editMode: boolean = false;
   editedItemIndex: number = 0;
   editedItem!: Ingredient;
+  updatedItem: Ingredient = new Ingredient(0,'',0,'');
 
   constructor(private ingService: IngredientService) { }
 
-  async fileChanged(filesList: FileList) {
-    const formData: FormData = new FormData();
-    const fileToUpload = filesList.item(0);
-    formData.append(`image`, fileToUpload!, fileToUpload!.name);
+  async fileChanged(e: Event) {
+    const fileToUpload: File | null = (<HTMLInputElement>e.target).files![0];
+    fileToUpload.arrayBuffer().then(p => {
+      this.updatedItem.amount = p.byteLength;
+      this.updatedItem.image = btoa(new Uint8Array(p.slice(0)).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+    })
   }
 
   onSubmit(form: NgForm) {
-    const value = form.value;
-    const newIngredient = new Ingredient(value.name, value.image);
-    if (this.editMode) {
-      this.ingService.updateIngredient(this.editedItemIndex, newIngredient);
-    } else {
-      this.ingService.addIngredient(newIngredient);
-    }
+    this.updatedItem.name = form.value.name;
+    this.ingService.createUpdateIngredient(this.editedItemIndex, this.updatedItem);
     this.editMode = false;
     form.reset();
   }
@@ -57,7 +57,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
       this.editedItem = this.ingService.getIngredient(index);
       this.slForm.setValue({
         name: this.editedItem.name,
-        image: this.editedItem.image
+        image: ''
       });
     });
   }

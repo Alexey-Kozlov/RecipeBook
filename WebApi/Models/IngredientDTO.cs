@@ -6,5 +6,6 @@
         public string name { get; set; }
         public decimal amount { get; set; }
         public string? image { get; set; }
+        public int size { get; set; }
     }
 }
