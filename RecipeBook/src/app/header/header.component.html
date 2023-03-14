@@ -12,8 +12,8 @@
         <li class="dropdown" appDropdown>
           <a style="cursor:pointer" class="dropdown-toggle" role="button">Управление <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a style="cursor:pointer">Сохранить данные</a></li>
-            <li><a style="cursor:pointer">Получить данные</a></li>
+            <li><a style="cursor:pointer" (click)="onSaveData()">Сохранить данные</a></li>
+            <li><a style="cursor:pointer" (click)="onLoadData()">Получить данные</a></li>
           </ul>
         </li>
       </ul>

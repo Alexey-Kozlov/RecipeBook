@@ -28,18 +28,18 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="form-group">
-            <label for="imagePath">URL изображения</label>
+            <label for="image">URL изображения</label>
             <input type="text"
-                   id="imagePath"
+                   id="image"
                    class="form-control"
-                   formControlName="imagePath"
-                   #imagePath/>
+                   formControlName="image"
+                   #image/>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-12">
-          <img [src]="imagePath.value" class="img-responsive" />
+          <img [src]="image.value" class="img-responsive" />
         </div>
       </div>
       <div class="row">

@@ -6,6 +6,6 @@
         public string Name { get; set; }
         public string? Description { get; set; }
         public byte[]? Image { get; set; }
-        public IngredientAmount[] Ingredients { get; set; } = new IngredientAmount[0];
+        public List<IngredientAmount> Ingredients { get; set; } = new List<IngredientAmount>();
     }
 }
