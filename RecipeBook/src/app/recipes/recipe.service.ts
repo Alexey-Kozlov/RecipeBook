@@ -15,20 +15,20 @@ export class RecipeService {
       'Вкусная окрошка',
       'https://my-eda.ru/wp-content/uploads/2019/04/s1200-1.jpg',
       [
-        new Ingredient('Квас', 200),
-        new Ingredient('Колбаса', 2),
-        new Ingredient('Лук', 15),
-        new Ingredient('Яйцо', 1),
-        new Ingredient('Огурцы', 20)
+        new Ingredient(1,'Квас', 200),
+        new Ingredient(2,'Колбаса', 2),
+        new Ingredient(3,'Лук', 15),
+        new Ingredient(4,'Яйцо', 1),
+        new Ingredient(5,'Огурцы', 20)
       ]),
     new Recipe(
       'Блины',
       'Классические русские блины',
       'https://dachadecor.ru/images2/kjdnvjntdkj.jpg',
       [
-        new Ingredient('Молоко', 500),
-        new Ingredient('Яйца', 5),
-        new Ingredient('Мука', 15)
+        new Ingredient(1,'Молоко', 500),
+        new Ingredient(2,'Яйца', 5),
+        new Ingredient(3,'Мука', 15)
       ])
   ];
 

@@ -24,7 +24,14 @@ export class DataStorageService {
   }
 
   saveIngredient(ingredient: Ingredient) {
-    this.http.post(process.env.NG_APP_API + '/CreateIngredient', ingredient)
+    this.http.post(process.env.NG_APP_API + '/CreateUpdateIngredient', ingredient)
+      .subscribe(response => {
+        console.log(response);
+      });
+  }
+
+  deleteIngredient(ingredient: Ingredient) {
+    this.http.post(process.env.NG_APP_API + '/DeleteIngredient', ingredient.id)
       .subscribe(response => {
         console.log(response);
       });

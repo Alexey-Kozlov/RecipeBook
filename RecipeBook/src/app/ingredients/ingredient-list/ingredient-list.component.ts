@@ -15,9 +15,19 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   constructor(private ingService: IngredientService) { }
 
   ngOnInit() {
-    this.ingredients = this.ingService.getIngredients();
+    const ingredientArray = this.ingService.getIngredients();
+    ingredientArray.forEach(p => {
+      p.image = 'data:image/png;base64,' + p.image;
+    });
+    this.ingredients = ingredientArray;
+
     this.idChangeSubscription = this.ingService.ingredientChanged.subscribe(
       (ingredients: Ingredient[]) => {
+        ingredients.forEach(p => {
+          if (p.image?.indexOf('data:image/png;base64') === -1) {
+            p.image = 'data:image/png;base64,' + p.image;
+          }
+        });
         this.ingredients = ingredients;
       }
     );

@@ -23,10 +23,16 @@ namespace WebApi.Controllers
             return _mapper.Map<List<IngredientDTO>>(await _ingredientService.GetIngredients());
         }
 
-        [HttpPost("CreateIngredient")]
-        public async Task<IngredientDTO> CreateIngredient([FromBody]IngredientDTO ingredient)
+        [HttpPost("CreateUpdateIngredient")]
+        public async Task<IngredientDTO> CreateUpdateIngredient([FromBody]IngredientDTO ingredient)
         {
-            return _mapper.Map<IngredientDTO>(await _ingredientService.CreateIngredient(ingredient));
+            return _mapper.Map<IngredientDTO>(await _ingredientService.CreateUpdateIngredient(ingredient));
+        }
+
+        [HttpPost("DeleteIngredient")]
+        public async Task<IngredientDTO> DeleteIngredient([FromBody] int id)
+        {
+            return _mapper.Map<IngredientDTO>(await _ingredientService.DeleteIngredient(id));
         }
     }
 }

@@ -15,9 +15,10 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   @ViewChild('f', { static: false }) slForm!: NgForm;
   subscription!: Subscription;
   editMode: boolean = false;
-  editedItemIndex: number = 0;
+  editedItemId: number = 0;
   editedItem!: Ingredient;
-  updatedItem: Ingredient = new Ingredient(0,'',0,'');
+  updatedItem: Ingredient = new Ingredient(0, '', 0, '');
+  editImageSrc: string = '';
 
   constructor(private ingService: IngredientService) { }
 
@@ -26,23 +27,25 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     fileToUpload.arrayBuffer().then(p => {
       this.updatedItem.amount = p.byteLength;
       this.updatedItem.image = btoa(new Uint8Array(p.slice(0)).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+      this.editImageSrc = 'data:image/png;base64,' + this.updatedItem.image;
     })
   }
 
   onSubmit(form: NgForm) {
     this.updatedItem.name = form.value.name;
-    this.ingService.createUpdateIngredient(this.editedItemIndex, this.updatedItem);
+    this.ingService.createUpdateIngredient(this.editedItemId, this.updatedItem);
     this.editMode = false;
     form.reset();
   }
 
   onClear() {
     this.slForm.reset();
+    this.editImageSrc = '';
     this.editMode = false;
   }
 
   onDelete() {
-    this.ingService.deleteIngredient(this.editedItemIndex);
+    this.ingService.deleteIngredient(this.editedItemId);
     this.onClear();
   }
 
@@ -51,10 +54,11 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.ingService.startedEditing.subscribe((index: number) => {
+    this.subscription = this.ingService.startedEditing.subscribe((id: number) => {
       this.editMode = true;
-      this.editedItemIndex = index;
-      this.editedItem = this.ingService.getIngredient(index);
+      this.editedItemId= id;
+      this.editedItem = this.ingService.getIngredient(id)!;
+      this.editImageSrc = this.editedItem.image!;
       this.slForm.setValue({
         name: this.editedItem.name,
         image: ''

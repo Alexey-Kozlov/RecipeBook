@@ -11,7 +11,10 @@
                  ngModel
                  required />
         </div>
-        <div class="col-sm-2 form-group">
+      </div>
+      <div class="row">
+
+        <div class="col-sm-2 form-group imageBlock">
           <label for="amount">Изображение</label>
           <input type="file"
                  id="image"
@@ -19,8 +22,11 @@
                  class="form-control"
                  accept="image/*"
                  ngModel
-                 (change)="fileChanged($event)"
-                 >
+                 (change)="fileChanged($event)">
+        </div>
+        <div class="imgPreview" *ngIf="editImageSrc">
+          <img id="imagePreview"
+               src={{editImageSrc}} />
         </div>
       </div>
       <div class="row">

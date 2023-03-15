@@ -1,3 +1,16 @@
 #image{
     width:400px;
 }
+#name{
+    width:400px;
+}
+#imagePreview{
+    width:80px;
+}
+.imageBlock {
+  width: 400px;
+}
+.imgPreview {
+  display: inline-block;
+  padding-left: 30px;
+}
