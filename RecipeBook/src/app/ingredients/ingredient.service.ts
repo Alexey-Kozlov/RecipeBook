@@ -54,4 +54,9 @@ export class IngredientService {
     this.ingredientChanged.next(this.ingredients.slice());
   }
 
+  setIngredients(ingredients: Ingredient[]) {
+    this.ingredients = ingredients;
+    this.ingredientChanged.next(this.ingredients.slice());
+  }
+
 }

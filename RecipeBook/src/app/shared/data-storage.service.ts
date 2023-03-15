@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { IngredientService } from "../ingredients/ingredient.service";
 import { Recipe } from "../recipes/recipe.model";
 import { RecipeService } from "../recipes/recipe.service";
 import { Ingredient } from "./ingredient.model";
@@ -7,7 +8,8 @@ import { Ingredient } from "./ingredient.model";
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
   constructor(private http: HttpClient,
-    private recipeService: RecipeService) { }
+    private recipeService: RecipeService,
+    private ingredientService: IngredientService) { }
 
   saveRecipes() {
     const recipes = this.recipeService.getRecipes();
@@ -35,5 +37,11 @@ export class DataStorageService {
       .subscribe(response => {
         console.log(response);
       });
+  }
+
+  loadIngredients() {
+    this.http.get<Ingredient[]>(process.env.NG_APP_API + '/GetIngredients').subscribe(ingredients => {
+      this.ingredientService.setIngredients(ingredients);
+    });
   }
 }
