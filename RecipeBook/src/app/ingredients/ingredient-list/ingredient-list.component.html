@@ -3,7 +3,7 @@
     <app-ingredient-edit></app-ingredient-edit>
     <hr />
     <ul class="list-group">
-      <a class="list-group-item"
+      <a class="list-group-item {{ingredient.id == id ? 'active' : ''}}"
          style="cursor:pointer"
          *ngFor="let ingredient of ingredients"
          (click)="onEditItem(ingredient.id)">

@@ -12,10 +12,10 @@ export class DataStorageService {
     private ingredientService: IngredientService) { }
 
   saveRecipes() {
-    const recipes = this.recipeService.getRecipes();
-    this.http.post(process.env.NG_APP_API + '/CreateUpdateRecipe', recipes)
+    //const recipes = this.recipeService.getRecipes();
+    this.http.post(process.env.NG_APP_API + '/CreateUpdateRecipe', null)
       .subscribe(response => {
-        console.log(response);
+
       });
   }
 
@@ -25,17 +25,29 @@ export class DataStorageService {
     });
   }
 
+  loadRecipe(id: number) {
+    this.http.get<Recipe>(process.env.NG_APP_API + '/GetRecipe',
+      {
+        params: {
+          id:id
+        }
+      }
+    ).subscribe(recipe => {
+      this.recipeService.setRecipe(recipe);
+    });
+  }
+
   saveIngredient(ingredient: Ingredient) {
     this.http.post(process.env.NG_APP_API + '/CreateUpdateIngredient', ingredient)
       .subscribe(response => {
-        console.log(response);
+
       });
   }
 
-  deleteIngredient(ingredient: Ingredient) {
-    this.http.post(process.env.NG_APP_API + '/DeleteIngredient', ingredient.id)
+  deleteIngredient(id: number) {
+    this.http.post(process.env.NG_APP_API + '/DeleteIngredient', id)
       .subscribe(response => {
-        console.log(response);
+
       });
   }
 

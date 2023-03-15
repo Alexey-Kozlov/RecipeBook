@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { DataStorageService } from '../../shared/data-storage.service';
 import { Ingredient } from '../../shared/ingredient.model';
 import { IngredientService } from '../ingredient.service';
 
@@ -11,16 +12,13 @@ import { IngredientService } from '../ingredient.service';
 export class IngredientListComponent implements OnInit, OnDestroy {
   ingredients: Ingredient[] = [];
   private idChangeSubscription: Subscription | undefined;
+  id: number = 0;
 
-  constructor(private ingService: IngredientService) { }
+  constructor(private ingService: IngredientService, private dataStorageService: DataStorageService) { }
 
   ngOnInit() {
-    const ingredientArray = this.ingService.getIngredients();
-    ingredientArray.forEach(p => {
-      p.image = 'data:image/png;base64,' + p.image;
-    });
-    this.ingredients = ingredientArray;
-
+    const ingredientArray = this.dataStorageService.loadIngredients();
+    
     this.idChangeSubscription = this.ingService.ingredientChanged.subscribe(
       (ingredients: Ingredient[]) => {
         ingredients.forEach(p => {
@@ -38,6 +36,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   }
 
   onEditItem(id: number) {
+    this.id = id;
     this.ingService.startedEditing.next(id);
   }
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Routing.Constraints;
 using WebApi.Domain;
 using WebApi.Models;
 
@@ -35,7 +36,10 @@ namespace WebApi.Services
                 )));
 
             CreateMap<RecipeDTO, Recipe>()
-                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => Convert.FromBase64String(src.image!)))
+                .ForMember(dest => dest.Image, opt => {
+                    opt.PreCondition(s => !string.IsNullOrEmpty(s.image));
+                    opt.MapFrom(src => Convert.FromBase64String(src.image!));
+                })
                 .ForMember(dest => dest.Ingredients, opt => opt.MapFrom(src =>
                     src.ingredients.Select(p => new IngredientAmount
                     {
@@ -55,11 +59,19 @@ namespace WebApi.Services
                 ));
 
             CreateMap<Ingredient, IngredientDTO>()
-                .ForMember(dest => dest.image, opt => opt.MapFrom(src =>
-                "data:image/png;base64," + Convert.ToBase64String(src.Image!)));
+                .ForMember(dest => dest.image, opt => opt.MapFrom(src => Convert.ToBase64String(src.Image!)));
 
             CreateMap<IngredientDTO, Ingredient>()
-                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => Convert.FromBase64String(src.image!)));
+                .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.amount))
+                .ForMember(dest => dest.Image, opt =>
+                {
+                    opt.Condition(s => !string.IsNullOrEmpty(s.image));
+                    opt.MapFrom((src, dest) =>
+                    {
+                        src.image = src.image!.Replace("data:image/png;base64,", "");
+                        return Convert.FromBase64String(src.image!);
+                    }); 
+                });                
         }
     }
 

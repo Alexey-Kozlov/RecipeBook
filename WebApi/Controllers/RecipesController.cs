@@ -23,7 +23,7 @@ namespace WebApi.Controllers
             return await _recipeService.GetRecipeDTOList();
         }
 
-        [HttpGet("GetRecipe/{id}")]
+        [HttpGet("GetRecipe")]
         public async Task<RecipeDTO> GetRecipeById(int id)
         {
             return await _recipeService.GetRecipeDTOById(id);

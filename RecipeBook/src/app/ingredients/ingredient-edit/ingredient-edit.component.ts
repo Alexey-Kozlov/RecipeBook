@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { DataStorageService } from '../../shared/data-storage.service';
 import { Ingredient } from '../../shared/ingredient.model';
 import { IngredientService } from '../ingredient.service';
 
@@ -20,7 +21,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   updatedItem: Ingredient = new Ingredient(0, '', 0, '');
   editImageSrc: string = '';
 
-  constructor(private ingService: IngredientService) { }
+  constructor(private ingService: IngredientService, private dataStorageService:DataStorageService) { }
 
   async fileChanged(e: Event) {
     const fileToUpload: File | null = (<HTMLInputElement>e.target).files![0];
@@ -33,7 +34,9 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
 
   onSubmit(form: NgForm) {
     this.updatedItem.name = form.value.name;
+    this.updatedItem.id = this.editedItemId;
     this.ingService.createUpdateIngredient(this.editedItemId, this.updatedItem);
+    this.dataStorageService.saveIngredient(this.updatedItem);
     this.editMode = false;
     form.reset();
   }
@@ -45,6 +48,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   }
 
   onDelete() {
+    this.dataStorageService.deleteIngredient(this.editedItemId);
     this.ingService.deleteIngredient(this.editedItemId);
     this.onClear();
   }
@@ -59,6 +63,8 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
       this.editedItemId= id;
       this.editedItem = this.ingService.getIngredient(id)!;
       this.editImageSrc = this.editedItem.image!;
+      this.updatedItem.image = '';
+      this.updatedItem.amount = 0;
       this.slForm.setValue({
         name: this.editedItem.name,
         image: ''
