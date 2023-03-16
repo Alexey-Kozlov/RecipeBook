@@ -17,8 +17,6 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   constructor(private ingService: IngredientService, private dataStorageService: DataStorageService) { }
 
   ngOnInit() {
-    const ingredientArray = this.dataStorageService.loadIngredients();
-    
     this.idChangeSubscription = this.ingService.ingredientChanged.subscribe(
       (ingredients: Ingredient[]) => {
         ingredients.forEach(p => {

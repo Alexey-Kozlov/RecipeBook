@@ -2,3 +2,14 @@ input.ng-invalid.ng-touched,
 textarea.ng-invalid.ng-touched {
   border: 2px solid red;
 }
+.selIngredient{
+    width:200px;
+}
+.ingrImg {
+  width: 80px;
+  height:80px;
+}
+.imgIngredient{
+    margin-right:40px;
+}
+
