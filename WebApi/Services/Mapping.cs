@@ -12,7 +12,7 @@ namespace WebApi.Services
             //если получаем список рецептов - изображения ингридиентов не нужны
             CreateMap<Recipe, RecipeDTO>()
                 .ForMember(dest => dest.image, opt => opt.MapFrom(src =>
-                "data:image/png;base64," + Convert.ToBase64String(src.Image!)))
+                    src.Image == null ? "" : "data:image/png;base64," + Convert.ToBase64String(src.Image!)))
                 .ForMember(dest => dest.ingredients, opt => opt.Ignore())
             ;
         }
@@ -23,12 +23,13 @@ namespace WebApi.Services
         {
             //если получаем конкретный рецепт - нужны изображения ингридиентов
             CreateMap<Recipe, RecipeDTO>()
-                .ForMember(dest => dest.image, opt => opt.MapFrom(src => Convert.ToBase64String(src.Image!)))
+                .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.Image == null ? "" : Convert.ToBase64String(src.Image!)))
                 .ForMember(dest => dest.ingredients, opt => opt.MapFrom(src =>
                     src.Ingredients.Select(p => new IngredientDTO
                     {
                         name = p.Ingredient.Name,
-                        id = p.IngredientId,
+                        ingredientId = p.IngredientId,
+                        id = p.Id,
                         amount = p.Amount,
                         image = p.Ingredient.Image == null ? "" :
                         "data:image/png;base64," + Convert.ToBase64String(p.Ingredient.Image)
@@ -36,30 +37,25 @@ namespace WebApi.Services
                 )));
 
             CreateMap<RecipeDTO, Recipe>()
-                .ForMember(dest => dest.Image, opt => {
+                .ForMember(dest => dest.Image, opt =>
+                {
                     opt.PreCondition(s => !string.IsNullOrEmpty(s.image));
-                    opt.MapFrom(src => Convert.FromBase64String(src.image!));
+                    opt.MapFrom(src => src.image.Contains("data:image/png;base64,") ? Convert.FromBase64String(src.image.Replace("data:image/png;base64,", "")) : Convert.FromBase64String(src.image!));
                 })
-                .ForMember(dest => dest.Ingredients, opt => opt.MapFrom(src =>
-                    src.ingredients.Select(p => new IngredientAmount
+                .ForMember(dest => dest.Ingredients, opt => opt.MapFrom((src, dest) =>
                     {
-                        IngredientId = p.id,
-                        Amount = p.amount
+                        return src.ingredients.Select(p => new IngredientAmount
+                        {
+                            Id = p.id,
+                            RecipeId = dest.Id,
+                            IngredientId = p.ingredientId,
+                            Amount = p.amount
+                        });
                     })
-                //foreach (var ingredient in src.ingredients)
-                //{
-                //    dest.Ingredients.Add(new IngredientAmount()
-                //    {
-                //        Name = ingredient.name,
-                //        Id = ingredient.id,
-                //        Image = string.IsNullOrEmpty(ingredient.image) ? null : Convert.FromBase64String(ingredient.image)
-                //    });
-                //}
-                //return dest.ingredients;
-                ));
+                );
 
             CreateMap<Ingredient, IngredientDTO>()
-                .ForMember(dest => dest.image, opt => opt.MapFrom(src => Convert.ToBase64String(src.Image!)));
+                .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.Image == null ? "" :  Convert.ToBase64String(src.Image!)));
 
             CreateMap<IngredientDTO, Ingredient>()
                 .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.amount))

@@ -1,98 +1,111 @@
-<div class="row">
-  <div class="col-xs-12">
-    <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
-      <div class="row">
-        <div class="col-xs-12">
-          <button type="submit"
-                  class="btn btn-success"
-                  [disabled]="!recipeForm.valid">
-            Сохранить
-          </button>&nbsp;
-          <button type="button"
-                  class="btn btn-danger"
-                  (click)="onCancel()"
-                  >
-            Отменить
-          </button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label for="name">Наименование</label>
-            <input type="text" id="name" class="form-control"
-                   formControlName="name" />
+<div *ngIf="recipeForm">
+  <div class="row">
+    <div class="col-xs-12">
+      <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-xs-12">
+            <button type="submit"
+                    class="btn btn-success"
+                    [disabled]="!recipeForm.valid">
+              Сохранить
+            </button>&nbsp;
+            <button type="button"
+                    class="btn btn-danger"
+                    (click)="onCancel()">
+              Отменить
+            </button>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label for="image">URL изображения</label>
-            <input type="text"
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="name">Наименование</label>
+              <input type="text" id="name" class="form-control"
+                     formControlName="name" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="image">Изображение</label>
+              <input type="hidden" id="image" formControlName="image" #image />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <img [src]="image.value" class="img-responsive"
+                 *ngIf="image.value.length > 23 " />
+            <h3 *ngIf="image.value.length <= 23 ">&lt;Без изображения&gt;</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <input type="file"
                    id="image"
+                   name="image"
                    class="form-control"
-                   formControlName="image"
-                   #image/>
+                   accept="image/*"
+                   (change)="fileChanged($event)">
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <img [src]="image.value" class="img-responsive" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label for="description">Примечание</label>
-            <textarea type="text" id="description"
-                      class="form-control"
-                      rows="4" formControlName="description"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12" formArrayName="ingredients">
-          <div class="row"
-               *ngFor="let ingredientCtrl of controls; let i = index"
-               [formGroupName]="i"
-               style="margin-top: 10px">
-            <div class="col-xs-1 imgIngredient">
-              <img class="form-control ingrImg"
-                   formControlName="image"
-                   src={{ingList[i].image}}
-                   />
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="description">Примечание</label>
+              <textarea type="text" id="description"
+                        class="form-control"
+                        rows="4"
+                        formControlName="description"></textarea>
             </div>
-            <div class="col-xs-2 selIngredient">
-              <select class="form-control "
-                      formControlName="name">
-                <option *ngFor="let item of ingList" [value]="item.name">{{item.name}}</option>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12" formArrayName="ingredients">
+            <div class="row"
+                 *ngFor="let ingredientCtrl of controls; let i = index"
+                 [formGroupName]="i"
+                 style="margin-top: 10px">
+              <div class="col-xs-1 imgIngredient">
+                <img class="form-control ingrImg"
+                     src={{ingredientCtrl.value.image}}
+                     *ngIf="ingredientCtrl.value.image && ingredientCtrl.value.image.length > 23 " />
+                <h3 *ngIf="ingredientCtrl.value.image && ingredientCtrl.value.image.length <= 23 ">&lt;Без изображения&gt;</h3>
+              </div>
+              <div class="col-xs-2 selIngredient">
+                <select class="form-control "
+                        formControlName="name"
+                        (change)="selectedIngr($event,i)">
+                  <option *ngFor="let item of ingList" [value]="item.name">{{item.name}}</option>
                 </select>
+              </div>
+              <div class="col-xs-2">
+                <input type="number"
+                       class="form-control"
+                       formControlName="amount" />
+              </div>
+              <div class="col-xs-2">
+                <button type="button"
+                        (click)="onDeleteIngredient(ingredientCtrl.value.id)"
+                        class="btn btn-danger">
+                  X
+                </button>
+              </div>
             </div>
-            <div class="col-xs-2">
-              <input type="number"
-                     class="form-control"
-                     formControlName="amount" />
-            </div>
-            <div class="col-xs-2">
-              <button type="button"
-                      (click)="onDeleteIngredient(i)"
-                      class="btn btn-danger">
-                X
-              </button>
-            </div>
-          </div>
-          <hr />
-          <div class="row">
-            <div class="col-xs-12">
-              <button class="btn btn-success"
-                      type="button"
-                      (click)="onAddIngredient()">Добавить компонент</button>
+            <hr />
+            <div class="row">
+              <div class="col-xs-12">
+                <button class="btn btn-success"
+                        type="button"
+                        (click)="onAddIngredient()">
+                  Добавить компонент
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>

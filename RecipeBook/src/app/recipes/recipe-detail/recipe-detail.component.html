@@ -3,7 +3,9 @@
     <div class="col-xs-12">
       <img src={{recipe.image}}
            style="max-height:250px"
-           class="img-responsive" />
+           class="img-responsive"
+           *ngIf="recipe.image.length > 23 "/>
+      <h3 *ngIf="recipe.image.length <= 23 ">&lt;Без изображения&gt;</h3>
     </div>
   </div>
   <div class="row">

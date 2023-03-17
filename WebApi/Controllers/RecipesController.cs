@@ -30,9 +30,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("CreateUpdateRecipe")]
-        public async Task<RecipeDTO> CreateUpdateRecipe([FromBody] List<RecipeDTO> recipe)
+        public async Task<RecipeDTO> CreateUpdateRecipe(RecipeDTO recipe)
         {
-            return _mapper.Map<RecipeDTO>(await _recipeService.CreateUpdateRecipe(recipe[0]));
+            return _mapper.Map<RecipeDTO>(await _recipeService.CreateUpdateRecipe(recipe));
         }
 
     }

@@ -29,21 +29,19 @@ export class RecipeService {
     this.slService.addIngredients(ingredients);
   }
 
-  getRecipe(index: number) {
-    return this.recipes.slice()[index];
-  }
-
   addRecipe(recipe: Recipe) {
     this.recipes.push(recipe);
     this.recipeChanges.next(this.recipes.slice());
   }
 
-  updateRecipe(index: number, newRecipe: Recipe) {
-    this.recipes[index] = newRecipe;
+  updateRecipe(id: number, newRecipe: Recipe) {
+    let recipe = this.recipes.find(p => p.id === id);
+    recipe = newRecipe;
     this.recipeChanges.next(this.recipes.slice());
   }
 
-  deleteRecipe(index: number) {
+  deleteRecipe(id: number) {
+    const index = this.recipes.indexOf(this.recipes.find(p => p.id === id)!);
     this.recipes.splice(index, 1);
     this.recipeChanges.next(this.recipes.slice());
   }

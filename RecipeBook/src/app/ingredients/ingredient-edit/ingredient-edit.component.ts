@@ -18,7 +18,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   editMode: boolean = false;
   editedItemId: number = 0;
   editedItem!: Ingredient;
-  updatedItem: Ingredient = new Ingredient(0, '', 0, '');
+  updatedItem: Ingredient = new Ingredient(0, 0, '', 0, '');
   editImageSrc: string = '';
 
   constructor(private ingService: IngredientService, private dataStorageService:DataStorageService) { }

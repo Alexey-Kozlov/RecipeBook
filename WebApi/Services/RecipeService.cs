@@ -49,8 +49,10 @@ namespace WebApi.Services
             else
             {
                 //обновление рецепта
-                _recipe = await _dataContext.Recipe.FirstOrDefaultAsync(p => p.Id == recipe.id);
+                _recipe = await _dataContext.Recipe
+                    .FirstOrDefaultAsync(p => p.Id == recipe.id);
                 _mapper.Map(recipe, _recipe);
+
             }
             await _dataContext.SaveChangesAsync();
             //заполняем значения ингредиентов

@@ -11,11 +11,10 @@ export class DataStorageService {
     private recipeService: RecipeService,
     private ingredientService: IngredientService) { }
 
-  saveRecipes() {
-    //const recipes = this.recipeService.getRecipes();
-    this.http.post(process.env.NG_APP_API + '/CreateUpdateRecipe', null)
-      .subscribe(response => {
-
+  saveRecipe(recipe: Recipe) {
+    this.http.post<Recipe>(process.env.NG_APP_API + '/CreateUpdateRecipe', recipe)
+      .subscribe(recipe => {
+        this.recipeService.recipe.next(recipe);
       });
   }
 
