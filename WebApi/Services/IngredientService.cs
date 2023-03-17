@@ -27,7 +27,7 @@ namespace WebApi.Services
             Ingredient? _ingredient = new Ingredient();
             if (ingredient.id == 0)
             {
-                _ingredient = _mapper.Map<Ingredient>(_ingredient);
+                _ingredient = _mapper.Map<Ingredient>(ingredient);
                 _dataContext.Ingredient.Add(_ingredient);
             }
             else

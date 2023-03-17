@@ -59,6 +59,7 @@ namespace WebApi.Services
 
             CreateMap<IngredientDTO, Ingredient>()
                 .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.amount))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.name))
                 .ForMember(dest => dest.Image, opt =>
                 {
                     opt.Condition(s => !string.IsNullOrEmpty(s.image));

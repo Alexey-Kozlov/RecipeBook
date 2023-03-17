@@ -23,6 +23,16 @@ export class RecipeService {
 
   setRecipe(recipe: Recipe) {
     this.recipe.next(recipe);
+    if (this.recipes.find(p => p.id == recipe.id)) {
+      //замена элемента массива
+      this.recipes = this.recipes.map(item => item.id == recipe.id ? recipe : item);
+    } else {
+      //добавляем элемент в массив
+      recipe.image = 'data:image/png;base64,' + recipe.image;
+      this.recipes.push(recipe);
+    }
+  
+    this.recipeChanges.next(this.recipes.slice());
   }
 
   addIngredientsToShoppingList(ingredients: Ingredient[]) {

@@ -34,7 +34,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       (params: Params) => {
         this.id = +params['id'];
         this.editMode = params['id'] != null;
-        this.dataStorageService.loadRecipe(this.id);
+        if (this.editMode) {
+          this.dataStorageService.loadRecipe(this.id);
+        }
       }
     );
     this.recipeSubscription = this.recipeService.recipe.subscribe(
@@ -44,15 +46,16 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.initForm();
       }
     );
-    this.dataStorageService.loadIngredients();
     this.ingredientSubscription = this.ingredientService.ingredientChanged.subscribe(
       (ingredients: Ingredient[]) => {
         this.ingList = ingredients;
       }
     )
-    
+    this.dataStorageService.loadIngredients();
+    if (!this.editMode) {
+      this.initForm();
+    }
   }
-
   ngOnDestroy(): void {
     this.recipeSubscription.unsubscribe();
     this.ingredientSubscription.unsubscribe();
@@ -71,12 +74,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       this.recipeForm.value.image,
       ingredients
     )
-    if (this.editMode) {
-      this.dataStorageService.saveRecipe(newResipe);
-      this.recipeService.updateRecipe(this.id, this.recipeForm.value)
-    } else {
-      this.recipeService.addRecipe(this.recipeForm.value);
-    }
+    this.dataStorageService.saveRecipe(newResipe);
     this.onCancel();
   }
 
@@ -127,6 +125,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   onAddIngredient() {
     (<FormArray>this.recipeForm.get('ingredients')).push(
       new FormGroup({
+        'ingredientId': new FormControl(null),
         'image': new FormControl(null),
         'name': new FormControl(null, Validators.required),
         'amount': new FormControl(null, [
@@ -142,7 +141,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   onDeleteIngredient(index: number) {
+    const id = (<FormArray>this.recipeForm.get('ingredients')).controls[index].value.id;
     (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
+    this.dataStorageService.deleteRecipeIngredient(id);
   }
 
   selectedIngr(e: Event, index: number) {
@@ -150,15 +151,17 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     const changedIngredientText: string = (<HTMLSelectElement>e.target).value;
     const changedIngredient: Ingredient = this.ingList.find(p => p.name == changedIngredientText)!;
     //this.recipeForm.value.ingredients[index].image = changedIngredient.image; //так тоже можно
-    (<FormArray>this.recipeForm.get('ingredients')).controls[index].value.image = changedIngredient.image;
-    (<FormArray>this.recipeForm.get('ingredients')).controls[index].value.ingredientId = changedIngredient.id;
+    (<FormArray>this.recipeForm.get('ingredients')).controls[index].patchValue({ image: changedIngredient.image });
+    (<FormArray>this.recipeForm.get('ingredients')).controls[index].patchValue({ ingredientId: changedIngredient.id });
   }
 
   async fileChanged(e: Event) {
     const fileToUpload: File | null = (<HTMLInputElement>e.target).files![0];
     fileToUpload.arrayBuffer().then(p => {
-      this.recipe.image = btoa(new Uint8Array(p.slice(0)).reduce((data, byte) => data + String.fromCharCode(byte), ''));
-      (<FormGroup>this.recipeForm).patchValue({ image: 'data:image/png;base64,' + this.recipe.image });
+      (<FormGroup>this.recipeForm).patchValue({
+        image: 'data:image/png;base64,' +
+          btoa(new Uint8Array(p.slice(0)).reduce((data, byte) => data + String.fromCharCode(byte), ''))
+      });
     })
   }
 

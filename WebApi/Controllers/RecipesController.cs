@@ -35,5 +35,17 @@ namespace WebApi.Controllers
             return _mapper.Map<RecipeDTO>(await _recipeService.CreateUpdateRecipe(recipe));
         }
 
+        [HttpPost("DeleteRecipe")]
+        public async Task<bool> DeleteRecipe([FromBody] int id)
+        {
+            return await _recipeService.DeleteRecipe(id);
+        }
+
+        [HttpPost("DeleteRecipeIngredient")]
+        public async Task<bool> DeleteRecipeIngredient([FromBody] int id)
+        {
+            return await _recipeService.DeleteRecipeIngredient(id);
+        }
+
     }
 }

@@ -63,5 +63,29 @@ namespace WebApi.Services
             return _recipe!;
         }
 
+        public async Task<bool> DeleteRecipe(int recipeId)
+        {
+            var recipe = await _dataContext.Recipe.FirstOrDefaultAsync(p => p.Id == recipeId);
+            if (recipe != null)
+            {
+                _dataContext.IngredientAmount.RemoveRange(_dataContext.IngredientAmount.Where(p => p.RecipeId == recipeId));
+                _dataContext.Recipe.Remove(recipe);
+                await _dataContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteRecipeIngredient(int recipeIngredientId)
+        {
+            var recipe = await _dataContext.IngredientAmount.FirstOrDefaultAsync(p => p.Id == recipeIngredientId);
+            if (recipe != null)
+            {
+                _dataContext.IngredientAmount.Remove(recipe);
+                await _dataContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }
