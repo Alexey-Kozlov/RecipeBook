@@ -6,7 +6,7 @@ using WebApi.Services;
 namespace WebApi.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("rb/api")]
     public class IngredientController : ControllerBase
     {
         private readonly IngredientService _ingredientService;
