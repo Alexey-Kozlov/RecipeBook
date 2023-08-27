@@ -42,8 +42,7 @@ import { IngredientEditComponent } from './ingredients/ingredient-edit/ingredien
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [ShoppingListService,
-    { provide: APP_BASE_HREF, useValue: '/rb' }],
+  providers: [ShoppingListService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
