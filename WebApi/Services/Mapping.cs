@@ -27,7 +27,7 @@ namespace WebApi.Services
                 .ForMember(dest => dest.ingredients, opt => opt.MapFrom(src =>
                     src.Ingredients.Select(p => new IngredientDTO
                     {
-                        name = p.Ingredient.Name,
+                        name = p.Ingredient!.Name,
                         ingredientId = p.IngredientId,
                         id = p.Id,
                         amount = p.Amount,
@@ -40,7 +40,7 @@ namespace WebApi.Services
                 .ForMember(dest => dest.Image, opt =>
                 {
                     opt.PreCondition(s => !string.IsNullOrEmpty(s.image));
-                    opt.MapFrom(src => src.image.Contains("data:image/png;base64,") ? Convert.FromBase64String(src.image.Replace("data:image/png;base64,", "")) : Convert.FromBase64String(src.image!));
+                    opt.MapFrom(src => src.image!.Contains("data:image/png;base64,") ? Convert.FromBase64String(src.image.Replace("data:image/png;base64,", "")) : Convert.FromBase64String(src.image!));
                 })
                 .ForMember(dest => dest.Ingredients, opt => opt.MapFrom((src, dest) =>
                     {

@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Persistance;
 using WebApi.Services;
@@ -10,7 +9,6 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 
 builder.Services.AddControllers();
-builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Mapping));
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<IngredientService>();
@@ -24,11 +22,7 @@ builder.Services.AddCors(opt =>
 });
 var app = builder.Build();
 app.UseCors("CorsPolicy");
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
 app.MapControllers();
 
 app.Run();

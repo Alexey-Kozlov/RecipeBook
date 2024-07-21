@@ -1,19 +1,25 @@
-FROM node:18-alpine as builder
-
+FROM node:18-alpine AS builder
+ENV NG_APP_API=/api
 WORKDIR /app
 
 COPY package.json .
 
-RUN npm install
+# если по какой-то причине билд не собирается, можно сделать билд в проекте командой
+# npm run build, и потом просто копируется готовый билд в образ
+# ВАЖНО! В этом случае не будет автоматической подстановки значений переменных из .env
+# Потребуется установить нужные значения переменных, сделать билд.
+
+# если нужна сборка билда при создании образа - раскомментировать строку ниже
+# RUN  npm install
 
 COPY . .
 
-RUN npm run build
+# если нужна сборка билда при создании образа - раскомментировать строку ниже
+# RUN npm run build
+
+
 
 FROM nginx
-
-RUN apt update \ 
-  && apt install -y mc
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
