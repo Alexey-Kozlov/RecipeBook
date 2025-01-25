@@ -12,7 +12,7 @@ namespace WebApi.Services
     {
         private readonly IMapper _mapper;
         private readonly DataContext _dataContext;
-        public RecipeService(DataContext dataContext, IMapper mapper) 
+        public RecipeService(DataContext dataContext, IMapper mapper)
         {
             _dataContext = dataContext;
             _mapper = mapper;
@@ -22,7 +22,7 @@ namespace WebApi.Services
         {
             var mapp = new Mapper(new MapperConfiguration(cfg => { cfg.AddProfile(new Mapping2()); }));
             var recipes = await _dataContext.Recipe
-                .ProjectTo<RecipeDTO>( mapp.ConfigurationProvider)
+                .ProjectTo<RecipeDTO>(mapp.ConfigurationProvider)
                 .ToListAsync();
             return recipes;
         }
@@ -39,7 +39,7 @@ namespace WebApi.Services
 
         public async Task<Recipe> CreateUpdateRecipe(RecipeDTO recipe)
         {
-            Recipe? _recipe = new Recipe();
+            Recipe _recipe = new Recipe();
             if (recipe.id == 0)
             {
                 //новый рецепт

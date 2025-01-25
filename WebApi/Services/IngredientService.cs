@@ -18,13 +18,13 @@ namespace WebApi.Services
         }
 
         public async Task<List<Ingredient>> GetIngredients()
-        {            
+        {
             return await _dataContext.Ingredient.ToListAsync();
         }
 
         public async Task<Ingredient> CreateUpdateIngredient(IngredientDTO ingredient)
         {
-            Ingredient? _ingredient = new Ingredient();
+            Ingredient _ingredient = new Ingredient();
             if (ingredient.id == 0)
             {
                 _ingredient = _mapper.Map<Ingredient>(ingredient);
@@ -42,7 +42,7 @@ namespace WebApi.Services
         public async Task<bool> DeleteIngredient(int ingredientId)
         {
             var ingredient = await _dataContext.Ingredient.FirstOrDefaultAsync(p => p.Id == ingredientId);
-            if(ingredient != null)
+            if (ingredient != null)
             {
                 _dataContext.Ingredient.Remove(ingredient);
                 await _dataContext.SaveChangesAsync();
